@@ -1,0 +1,153 @@
+# DEPRECATED: This workflow is replaced by ArgoCD GitOps
+# See: docs/ARGOCD_SETUP.md
+#
+# ArgoCD automatically deploys from Git repository changes
+# This file is kept for reference only
+#
+# To deploy:
+# 1. Push code to Git
+# 2. GitHub Actions builds images (build-gitops.yml)
+# 3. ArgoCD automatically syncs changes
+#
+# Manual deployment (if needed):
+# argocd app sync rcommerz-<environment>
+
+name: Deploy to Kubernetes (DEPRECATED - Use ArgoCD)
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to (Manual only - ArgoCD handles auto-deploy)'
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+jobs:
+  deploy-dev:
+    if: github.ref == 'refs/heads/develop' || inputs.environment == 'development'
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+      
+      - name: Configure Kubernetes Context
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_DEV }}" | base64 -d > ~/.kube/config
+      
+      - name: Deploy with Kustomize
+        run: |
+          kubectl apply -k infra/k8s/overlays/local
+      
+      - name: Wait for deployments
+        run: |
+          kubectl rollout status deployment/user-service -n rcommerz --timeout=5m
+          kubectl rollout status deployment/product-service -n rcommerz --timeout=5m
+          kubectl rollout status deployment/storefront -n rcommerz --timeout=5m
+      
+      - name: Verify deployment
+        run: |
+          kubectl get pods -n rcommerz
+          kubectl get services -n rcommerz
+
+  deploy-staging:
+    if: github.ref == 'refs/heads/staging' || inputs.environment == 'staging'
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+      
+      - name: Configure Kubernetes Context
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_STAGING }}" | base64 -d > ~/.kube/config
+      
+      - name: Update image tags
+        run: |
+          cd infra/k8s/overlays/staging
+          # Update kustomization.yaml with new image tags based on commit SHA
+          COMMIT_SHA=${{ github.sha }}
+          sed -i "s/newTag: staging-latest/newTag: staging-${COMMIT_SHA:0:7}/g" kustomization.yaml
+      
+      - name: Deploy with Kustomize
+        run: |
+          kubectl apply -k infra/k8s/overlays/staging
+      
+      - name: Wait for deployments
+        run: |
+          kubectl rollout status deployment/staging-user-service -n rcommerz-staging --timeout=10m
+          kubectl rollout status deployment/staging-product-service -n rcommerz-staging --timeout=10m
+      
+      - name: Run smoke tests
+        run: |
+          # Add smoke tests here
+          echo "Running smoke tests..."
+          # curl -f https://staging-api.yourcompany.com/health || exit 1
+
+  deploy-production:
+    if: github.ref == 'refs/heads/main' && inputs.environment == 'production'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+      
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: 'latest'
+      
+      - name: Configure Kubernetes Context
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_PROD }}" | base64 -d > ~/.kube/config
+      
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install rcommerz-platform \
+            ./infra/helm/rcommerz-platform \
+            --namespace rcommerz-prod \
+            --create-namespace \
+            --values ./infra/helm/rcommerz-platform/values-prod.yaml \
+            --set global.imageRegistry="${{ secrets.REGISTRY }}/" \
+            --set userService.image.tag="prod-${{ github.sha }}" \
+            --set productService.image.tag="prod-${{ github.sha }}" \
+            --wait \
+            --timeout 15m
+      
+      - name: Run smoke tests
+        run: |
+          echo "Running production smoke tests..."
+          # Add comprehensive smoke tests
+      
+      - name: Notify deployment
+        if: success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          text: 'Production deployment successful! :rocket:'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+      
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          helm rollback rcommerz-platform -n rcommerz-prod
+          echo "Deployment failed, rolled back to previous version"

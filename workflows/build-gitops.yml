@@ -1,0 +1,234 @@
+name: Build and Push Images (GitOps)
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - staging
+    paths:
+      - 'services/**'
+      - '.github/workflows/build-gitops.yml'
+  pull_request:
+    branches:
+      - main
+      - develop
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_OWNER: ${{ github.repository_owner }}
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      user-service: ${{ steps.filter.outputs.user-service }}
+      product-service: ${{ steps.filter.outputs.product-service }}
+      cart-service: ${{ steps.filter.outputs.cart-service }}
+      order-service: ${{ steps.filter.outputs.order-service }}
+      payment-service: ${{ steps.filter.outputs.payment-service }}
+      inventory-service: ${{ steps.filter.outputs.inventory-service }}
+      notification-service: ${{ steps.filter.outputs.notification-service }}
+      review-service: ${{ steps.filter.outputs.review-service }}
+      search-service: ${{ steps.filter.outputs.search-service }}
+      recommendation-service: ${{ steps.filter.outputs.recommendation-service }}
+      analytics-service: ${{ steps.filter.outputs.analytics-service }}
+      reporting-service: ${{ steps.filter.outputs.reporting-service }}
+      storefront: ${{ steps.filter.outputs.storefront }}
+      admin-panel: ${{ steps.filter.outputs.admin-panel }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            user-service:
+              - 'services/user-service/**'
+            product-service:
+              - 'services/product-service/**'
+            cart-service:
+              - 'services/cart-service/**'
+            order-service:
+              - 'services/order-service/**'
+            payment-service:
+              - 'services/payment-service/**'
+            inventory-service:
+              - 'services/inventory-service/**'
+            notification-service:
+              - 'services/notification-service/**'
+            review-service:
+              - 'services/review-service/**'
+            search-service:
+              - 'services/search-service/**'
+            recommendation-service:
+              - 'services/recommendation-service/**'
+            analytics-service:
+              - 'services/analytics-service/**'
+            reporting-service:
+              - 'services/reporting-service/**'
+            storefront:
+              - 'services/storefront/**'
+            admin-panel:
+              - 'services/admin-panel/**'
+
+  build-and-push:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    strategy:
+      matrix:
+        service:
+          - name: user-service
+            changed: ${{ needs.detect-changes.outputs.user-service }}
+          - name: product-service
+            changed: ${{ needs.detect-changes.outputs.product-service }}
+          - name: cart-service
+            changed: ${{ needs.detect-changes.outputs.cart-service }}
+          - name: order-service
+            changed: ${{ needs.detect-changes.outputs.order-service }}
+          - name: payment-service
+            changed: ${{ needs.detect-changes.outputs.payment-service }}
+          - name: inventory-service
+            changed: ${{ needs.detect-changes.outputs.inventory-service }}
+          - name: notification-service
+            changed: ${{ needs.detect-changes.outputs.notification-service }}
+          - name: review-service
+            changed: ${{ needs.detect-changes.outputs.review-service }}
+          - name: search-service
+            changed: ${{ needs.detect-changes.outputs.search-service }}
+          - name: recommendation-service
+            changed: ${{ needs.detect-changes.outputs.recommendation-service }}
+          - name: analytics-service
+            changed: ${{ needs.detect-changes.outputs.analytics-service }}
+          - name: reporting-service
+            changed: ${{ needs.detect-changes.outputs.reporting-service }}
+          - name: storefront
+            changed: ${{ needs.detect-changes.outputs.storefront }}
+          - name: admin-panel
+            changed: ${{ needs.detect-changes.outputs.admin-panel }}
+    
+    steps:
+      - name: Skip if no changes
+        if: matrix.service.changed != 'true'
+        run: echo "Skipping ${{ matrix.service.name }} - no changes detected"
+      
+      - uses: actions/checkout@v4
+        if: matrix.service.changed == 'true'
+      
+      - name: Set up Docker Buildx
+        if: matrix.service.changed == 'true'
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to Container Registry
+        if: matrix.service.changed == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Extract metadata
+        if: matrix.service.changed == 'true'
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ matrix.service.name }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+      
+      - name: Build and push
+        if: matrix.service.changed == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: ./services/${{ matrix.service.name }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+  
+  update-manifests:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/develop'
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      
+      - name: Determine environment
+        id: env
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+            echo "overlay=production" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
+            echo "environment=staging" >> $GITHUB_OUTPUT
+            echo "overlay=staging" >> $GITHUB_OUTPUT
+          else
+            echo "environment=development" >> $GITHUB_OUTPUT
+            echo "overlay=local" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Update image tags in Kustomize
+        run: |
+          cd infra/k8s/overlays/${{ steps.env.outputs.overlay }}
+          
+          # Update kustomization.yaml with new commit SHA
+          COMMIT_SHA=${{ github.sha }}
+          SHORT_SHA=${COMMIT_SHA:0:7}
+          
+          # Update image tags for all services
+          services=(
+            "user-service"
+            "product-service"
+            "cart-service"
+            "order-service"
+            "payment-service"
+            "inventory-service"
+            "notification-service"
+            "review-service"
+            "search-service"
+            "recommendation-service"
+            "analytics-service"
+            "reporting-service"
+            "storefront"
+            "admin-panel"
+          )
+          
+          for service in "${services[@]}"; do
+            # Use kustomize edit set image (if kustomize is installed)
+            # Or sed to update the tag
+            if grep -q "name: $service" kustomization.yaml; then
+              sed -i "s|newTag: .*# $service|newTag: ${{ github.ref_name }}-$SHORT_SHA # $service|g" kustomization.yaml || true
+            fi
+          done
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git add infra/k8s/overlays/${{ steps.env.outputs.overlay }}/kustomization.yaml
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update ${{ steps.env.outputs.environment }} image tags to ${{ github.sha }}"
+            git push
+          fi
+      
+      - name: Notify ArgoCD sync (optional)
+        run: |
+          echo "ArgoCD will automatically detect changes and sync"
+          echo "Or manually sync via: argocd app sync rcommerz-${{ steps.env.outputs.environment }}"

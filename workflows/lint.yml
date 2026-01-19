@@ -1,0 +1,96 @@
+name: Lint and Code Quality
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint-go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
+          working-directory: services/cart-service
+
+  lint-php:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      
+      - name: Install dependencies
+        working-directory: ./services/user-service
+        run: composer install --prefer-dist --no-progress
+      
+      - name: Run PHP CS Fixer
+        working-directory: ./services/user-service
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+  lint-node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Lint Product Service
+        working-directory: ./services/product-service
+        run: |
+          npm ci
+          npm run lint
+      
+      - name: Lint Customer Frontend
+        working-directory: ./services/storefront
+        run: |
+          npm ci
+          npm run lint
+
+  lint-python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install linters
+        run: |
+          pip install flake8 black mypy
+      
+      - name: Run flake8
+        run: |
+          flake8 services/search-service/ services/analytics-service/ services/reporting-service/
+      
+      - name: Run black
+        run: |
+          black --check services/search-service/ services/analytics-service/ services/reporting-service/
+
+  lint-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Lint YAML files
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: infra/k8s/
+          config_file: .yamllint.yml
+          strict: true
