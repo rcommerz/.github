@@ -101,6 +101,11 @@ Enterprise-grade rcommerz platform built with microservices architecture, event-
 
 - `8081` - Flink JobManager
 
+**Workflow Orchestration:**
+
+- `7233, 7234, 7235` - Temporal Server (gRPC, HTTP, Metrics)
+- `8088` - Temporal UI
+
 ### Application Services (Reserved)
 
 **Frontend Applications:**
