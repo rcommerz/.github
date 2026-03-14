@@ -91,27 +91,30 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 <td width="33%">
 
 #### Frontend Layer
-- **[customer-frontend](https://github.com/your-org/customer-frontend)** <br/> 
+
+- **[customer-frontend](https://github.com/your-org/customer-frontend)** <br/>
   `Next.js 14` - Public e-commerce site
-- **[admin-panel](https://github.com/your-org/admin-panel)** <br/> 
+- **[admin-panel](https://github.com/your-org/admin-panel)** <br/>
   `Next.js 14` - Management dashboard
 
 </td>
 <td width="33%">
 
 #### User & Identity
-- **[user-service](https://github.com/your-org/user-service)** <br/> 
+
+- **[user-service](https://github.com/your-org/user-service)** <br/>
   `Laravel` - User profiles, addresses
-- **Keycloak** <br/> 
+- **Keycloak** <br/>
   `OAuth2/OIDC` - Authentication & SSO
 
 </td>
 <td width="33%">
 
 #### Product Catalog
-- **[product-service](https://github.com/your-org/product-service)** <br/> 
+
+- **[product-service](https://github.com/your-org/product-service)** <br/>
   `Node.js` - Product management
-- **[search-service](https://github.com/your-org/search-service)** <br/> 
+- **[search-service](https://github.com/your-org/search-service)** <br/>
   `Python/FastAPI` - Full-text search
 
 </td>
@@ -120,33 +123,36 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 <td>
 
 #### Order Management
-- **[cart-service](https://github.com/your-org/cart-service)** <br/> 
+
+- **[cart-service](https://github.com/your-org/cart-service)** <br/>
   `Go` - Shopping cart
-- **[order-service](https://github.com/your-org/order-service)** <br/> 
+- **[order-service](https://github.com/your-org/order-service)** <br/>
   `Go` - Order orchestration
-- **[payment-service](https://github.com/your-org/payment-service)** <br/> 
+- **[payment-service](https://github.com/your-org/payment-service)** <br/>
   `Go` - Payment processing
 
 </td>
 <td>
 
 #### Inventory & Reviews
-- **[inventory-service](https://github.com/your-org/inventory-service)** <br/> 
+
+- **[inventory-service](https://github.com/your-org/inventory-service)** <br/>
   `Go` - Stock management
-- **[review-service](https://github.com/your-org/review-service)** <br/> 
+- **[review-service](https://github.com/your-org/review-service)** <br/>
   `Laravel` - Product reviews
 
 </td>
 <td>
 
 #### Engagement & Analytics
-- **[notification-service](https://github.com/your-org/notification-service)** <br/> 
+
+- **[notification-service](https://github.com/your-org/notification-service)** <br/>
   `Go` - Email/SMS/Push
-- **[recommendation-service](https://github.com/your-org/recommendation-service)** <br/> 
+- **[recommendation-service](https://github.com/your-org/recommendation-service)** <br/>
   `Node.js` - ML recommendations
-- **[analytics-service](https://github.com/your-org/analytics-service)** <br/> 
+- **[analytics-service](https://github.com/your-org/analytics-service)** <br/>
   `Python/FastAPI` - Real-time analytics
-- **[reporting-service](https://github.com/your-org/reporting-service)** <br/> 
+- **[reporting-service](https://github.com/your-org/reporting-service)** <br/>
   `Python/FastAPI` - BI reports
 
 </td>
@@ -160,11 +166,13 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 <td width="50%">
 
 **API Gateway & Security**
+
 - **Kong Gateway** - Unified API gateway with OIDC
 - **Keycloak** - Identity & access management
 - **HashiCorp Vault** - Secrets management
 
 **Message Broker & Streaming**
+
 - **Apache Kafka** - Event streaming
 - **Apache Flink** - Stream processing
 - **Debezium** - Change data capture
@@ -173,6 +181,7 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 <td width="50%">
 
 **Observability (LGTM Stack)**
+
 - **Loki** - Log aggregation
 - **Grafana** - Dashboards & visualization
 - **Tempo** - Distributed tracing
@@ -180,9 +189,9 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 - **Alloy** - Unified telemetry collector
 
 **Storage & Databases**
-- **MySQL** - Orders, payments, users
+
 - **MongoDB** - Products, reviews, inventory
-- **PostgreSQL** - Notifications, reporting
+- **PostgreSQL** - Orders, payments, users,Notifications, reporting
 - **Redis** - Cache & sessions
 - **Elasticsearch** - Product search
 - **ClickHouse** - OLAP analytics
@@ -197,6 +206,7 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 ## 🛠️ Technology Stack
 
 ### Languages & Frameworks
+
 ![Go](https://img.shields.io/badge/Go-1.21-00ADD8?logo=go&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-20-339933?logo=node.js&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?logo=php&logoColor=white)
@@ -206,13 +216,14 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 ![Next.js](https://img.shields.io/badge/Next.js-14-000000?logo=next.js&logoColor=white)
 
 ### Infrastructure
+
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-1.28+-326CE5?logo=kubernetes&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-24+-2496ED?logo=docker&logoColor=white)
 ![Kafka](https://img.shields.io/badge/Kafka-3.6-231F20?logo=apache-kafka&logoColor=white)
 ![Flink](https://img.shields.io/badge/Flink-1.18-E6526F?logo=apache-flink&logoColor=white)
 
 ### Databases
-![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)
+
 ![MongoDB](https://img.shields.io/badge/MongoDB-7.0-47A248?logo=mongodb&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-7.2-DC382D?logo=redis&logoColor=white)
@@ -220,6 +231,7 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 ![ClickHouse](https://img.shields.io/badge/ClickHouse-23.12-FFCC01?logo=clickhouse&logoColor=black)
 
 ### Observability
+
 ![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-1.22-000000?logo=opentelemetry&logoColor=white)
 ![Grafana](https://img.shields.io/badge/Grafana-10.2-F46800?logo=grafana&logoColor=white)
 ![Prometheus](https://img.shields.io/badge/Prometheus-2.48-E6522C?logo=prometheus&logoColor=white)
@@ -229,6 +241,7 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 ## ✨ Key Features
 
 ### 🔐 Security & Authentication
+
 - **Zero-Trust Architecture** - All traffic authenticated and authorized
 - **OAuth2/OIDC** - Industry-standard authentication via Keycloak
 - **RBAC** - Fine-grained role-based access control (customer, vendor, admin)
@@ -237,6 +250,7 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 - **mTLS** - Service-to-service encryption
 
 ### 📊 Real-Time Analytics
+
 - **Apache Flink CDC** - Sub-second latency data pipeline
 - **ClickHouse OLAP** - Fast aggregations (50-200ms queries)
 - **Debezium** - Change data capture from MySQL/MongoDB
@@ -244,6 +258,7 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 - **WebSocket Updates** - Real-time dashboard streaming
 
 ### 🔄 Event-Driven Architecture
+
 - **Apache Kafka** - High-throughput event streaming
 - **Transactional Outbox** - Guaranteed event delivery
 - **Event Sourcing** - Complete audit trail
@@ -251,6 +266,7 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 - **Dead Letter Queue** - Failed event handling
 
 ### 🎭 Distributed Transactions
+
 - **Saga Orchestration** - Order placement workflow
 - **Compensation Logic** - Automatic rollback on failure
 - **Idempotency** - Safe retry mechanisms
@@ -258,6 +274,7 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 - **Eventual Consistency** - Guaranteed convergence
 
 ### 📈 Complete Observability
+
 - **LGTM Stack** - Loki (logs), Grafana (dashboards), Tempo (traces), Mimir (metrics)
 - **OpenTelemetry** - Auto-instrumentation for all services
 - **Distributed Tracing** - End-to-end request tracking
@@ -266,6 +283,7 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 - **Alerting** - PagerDuty integration
 
 ### ⚡ Performance & Scalability
+
 - **Multi-Layer Caching** - Redis + CDN + in-memory
 - **Database Sharding** - Horizontal data partitioning
 - **Auto-Scaling** - Kubernetes HPA based on metrics
@@ -274,6 +292,7 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 - **Circuit Breakers** - Failure isolation
 
 ### 🛡️ Resilience & Reliability
+
 - **Circuit Breaker Pattern** - Prevent cascade failures
 - **Retry with Backoff** - Exponential retry strategy
 - **Bulkhead Pattern** - Resource isolation
@@ -299,6 +318,7 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 ```bash
 # Required
 - Docker 24+
@@ -312,6 +332,7 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 ```
 
 ### Local Development
+
 ```bash
 # Clone the architecture repository
 git clone https://github.com/your-org/architecture.git
@@ -333,6 +354,7 @@ kubectl apply -f kubernetes/services/
 ```
 
 ### Production Deployment
+
 ```bash
 # Deploy with Helm
 helm upgrade --install ecommerce ./helm \
@@ -361,6 +383,7 @@ kubectl apply -f argocd/applications/
 ## 📊 System Capabilities
 
 ### Scale Targets
+
 - **Concurrent Users**: 100,000+
 - **Transactions/Second**: 10,000+
 - **Product Catalog**: 10M+ products
@@ -369,12 +392,14 @@ kubectl apply -f argocd/applications/
 - **API Latency**: <200ms (P95)
 
 ### Availability
+
 - **Uptime SLA**: 99.95%
 - **Recovery Time (RTO)**: 15 minutes
 - **Recovery Point (RPO)**: 5 minutes
 - **Multi-AZ**: Automatic failover
 
 ### Data Volumes
+
 - **Database**: 5TB+ combined
 - **Object Storage**: 100TB+ (images, reports)
 - **Kafka Retention**: 7 days
@@ -388,6 +413,7 @@ kubectl apply -f argocd/applications/
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
 ### Development Workflow
+
 1. **Fork** the repository
 2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
 3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
@@ -395,6 +421,7 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 5. **Open** a Pull Request
 
 ### Code Standards
+
 - **Go**: Effective Go, golangci-lint
 - **Node.js**: ESLint + Prettier, Airbnb style guide
 - **PHP**: PSR-12, Laravel conventions
@@ -407,24 +434,28 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ## 📈 Roadmap
 
 ### ✅ Phase 1: Core Platform (Completed)
+
 - Microservices architecture with 14 services
 - Kong Gateway + Keycloak authentication
 - Basic CRUD operations
 - Event-driven communication
 
 ### ✅ Phase 2: Advanced Features (Completed)
+
 - Saga pattern for distributed transactions
 - Real-time analytics with Flink + ClickHouse
 - LGTM observability stack
 - Recommendation engine
 
 ### 🚧 Phase 3: Scale & Performance (In Progress)
+
 - Multi-region deployment
 - Advanced caching strategies
 - GraphQL federation
 - ML-powered recommendations
 
 ### 📋 Phase 4: Advanced Analytics (Planned)
+
 - Real-time fraud detection
 - Customer behavior prediction
 - Dynamic pricing engine
@@ -435,17 +466,20 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ## 🎓 Learning Resources
 
 ### Books
+
 - **Microservices Patterns** - Chris Richardson
 - **Designing Data-Intensive Applications** - Martin Kleppmann
 - **Building Microservices** - Sam Newman
 - **Domain-Driven Design** - Eric Evans
 
 ### Online Courses
+
 - [Microservices with Node.js and React](https://www.udemy.com/course/microservices-with-node-js-and-react/)
 - [Apache Kafka for Developers](https://www.confluent.io/training/)
 - [Kubernetes for Developers](https://training.linuxfoundation.org/training/kubernetes-for-developers/)
 
 ### Related Projects
+
 - [Kong Gateway](https://github.com/Kong/kong)
 - [Keycloak](https://github.com/keycloak/keycloak)
 - [Apache Kafka](https://github.com/apache/kafka)
@@ -458,7 +492,7 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 - **Documentation**: [Architecture Docs](https://github.com/your-org/architecture)
 - **Issues**: [GitHub Issues](https://github.com/your-org/architecture/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/your-org/architecture/discussions)
-- **Email**: platform-team@your-domain.com
+- **Email**: <platform-team@your-domain.com>
 - **Slack**: [Join our Slack](https://your-org.slack.com)
 
 ---
@@ -479,9 +513,9 @@ If you find this project useful, please consider giving it a ⭐️ on GitHub!
 
 **Built with ❤️ using modern cloud-native technologies**
 
-[Architecture](https://github.com/your-org/architecture) • 
-[Documentation](https://github.com/your-org/architecture/wiki) • 
-[API Docs](https://api-docs.your-domain.com) • 
+[Architecture](https://github.com/your-org/architecture) •
+[Documentation](https://github.com/your-org/architecture/wiki) •
+[API Docs](https://api-docs.your-domain.com) •
 [Contributing](CONTRIBUTING.md)
 
 </div>
