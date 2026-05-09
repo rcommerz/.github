@@ -244,7 +244,7 @@ A production-ready, scalable e-commerce platform demonstrating modern software a
 
 - **Zero-Trust Architecture** - All traffic authenticated and authorized
 - **OAuth2/OIDC** - Industry-standard authentication via Keycloak
-- **RBAC** - Fine-grained role-based access control (customer, vendor, admin)
+- **RBAC** - Fine-grained role-based access control (customer, admin)
 - **JWT Tokens** - Secure token-based authentication with rotation
 - **Secrets Management** - HashiCorp Vault integration
 - **mTLS** - Service-to-service encryption
